@@ -6,7 +6,7 @@ class MQTTHandler:
     def __init__(self, broker, port):
         self.client = mqtt.Client()
         self.credentials = None
-        self.base_topic = None
+        self.base_topic = "sensor/"
         self.broker = broker
         self.port = port
 
@@ -17,20 +17,24 @@ class MQTTHandler:
         self.client.on_message = self._on_message
 
         self.client.connect(self.broker, self.port)
+        self.client.message_callback_add(self.base_topic+"#", self._sensor_receive)
         self.client.loop_start()
 
     def disconnect(self):
         self.client.loop_stop()
         self.client.disconnect()
 
-    def subscribe(self, topic):
-        self.client.subscribe(topic)
+    def sensor_subscribe(self, topic, qos=2):
+        self.client.subscribe(self.base_topic + topic, qos)
+
+    def subscribe(self, topic, qos=2):
+        self.client.subscribe(topic, qos)
+
+    def _sensor_receive(self, client, topic, message):
+        print("Received message: " + str(message.payload.decode("utf-8")) + " on topic " + str(message.topic) + "with QoS " + str(message.qos))
 
     def _on_message(self, client, userdata, message):
-        print("message received ", str(message.payload.decode("utf-8")))
-        print("message topic=", message.topic)
-        print("message qos=", message.qos)
-        print("message retain flag=", message.retain)
+        print("fallback", message.topic, message.payload)
 
     def _load_credentials(self):
         with open("credentials.json") as f:
