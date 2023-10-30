@@ -3,10 +3,11 @@
 
 int BUTTON1_PIN = 2; //button is connected to GPIO pin D1
 int BUTTON2_PIN = 3;
+
 // Update these with values suitable for your network.
 const char* ssid = "P1";//put your wifi ssid here
 const char* password = "password1234";//put your wifi password here.
-const char* mqtt_server = "test.mosquitto.org";
+const char* mqtt_server = "192.168.1.149";
 //const char* mqtt_server = "iot.eclipse.org";
 
 WiFiClient espClient;
@@ -64,6 +65,7 @@ void reconnect() {
 } //end reconnect()
 
 void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(115200);
   setup_wifi();
   client.setServer(mqtt_server, 1883);
@@ -85,12 +87,15 @@ void loop() {
      String msg="Button status: ";
      if(status==LOW )
      {
-        msg= msg+ "Pressed";
+        msg= msg+ "Green Button Pressed";
        char message[58];
        msg.toCharArray(message,58);
        Serial.println(message);
+       digitalWrite(LED_BUILTIN, HIGH);
+       delay(1000);
+       digitalWrite(LED_BUILTIN, LOW);
        //publish sensor data to MQTT broker
-      client.publish("esp32test", message);
+      client.publish("sensor/button", message);
        }
      else
      {
@@ -99,7 +104,7 @@ void loop() {
        msg.toCharArray(message,58);
        Serial.println(message);
        //publish sensor data to MQTT broker
-      client.publish("esp32test", message);
+      client.publish("sensor/button", message);
      }
     }
      
