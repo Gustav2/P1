@@ -1,14 +1,15 @@
+#include <Arduino.h>
+#include <SensirionI2CSht4x.h>
+#include <Wire.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
+#include <string>
 
-int BUTTON1_PIN = 2; //button is connected to GPIO pin D1
-int BUTTON2_PIN = 3;
+SensirionI2CSht4x sht4x;
 
-// Update these with values suitable for your network.
 const char* ssid = "P1";//put your wifi ssid here
 const char* password = "password1234";//put your wifi password here.
 const char* mqtt_server = "192.168.1.149";
-//const char* mqtt_server = "iot.eclipse.org";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -38,6 +39,18 @@ void callback(char* topic, byte* payload, unsigned int length)
   
 } //end callback
 
+void setup() {
+    setup_wifi();
+    client.setServer(mqtt_server, 1883);
+    client.setCallback(callback);
+    Serial.begin(115200);
+    while (!Serial) {
+        delay(100);
+    }
+    Wire.begin();
+    sht4x.begin(Wire);
+}
+
 void reconnect() {
   // Loop until we're reconnected
   while (!client.connected()) 
@@ -64,48 +77,26 @@ void reconnect() {
   }
 } //end reconnect()
 
-void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
-  Serial.begin(115200);
-  setup_wifi();
-  client.setServer(mqtt_server, 1883);
-  client.setCallback(callback);
-  pinMode(BUTTON1_PIN,INPUT);
-}
-
 void loop() {
   if (!client.connected()) {
     reconnect();
   }
   client.loop();
-  long now = millis();
-  int status;
-  //send message every 2 second
-  if (now - lastMsg > 2000) {
-     lastMsg = now;
-     status=digitalRead(BUTTON1_PIN);
-     String msg="Button status: ";
-     if(status==LOW )
-     {
-        msg= msg+ "Green Button Pressed";
-       char message[58];
-       msg.toCharArray(message,58);
-       Serial.println(message);
-       digitalWrite(LED_BUILTIN, HIGH);
-       delay(1000);
-       digitalWrite(LED_BUILTIN, LOW);
-       //publish sensor data to MQTT broker
-      client.publish("sensor/button", message);
-       }
-     else
-     {
-      msg= msg+ " Not Pressed";
-       char message[58];
-       msg.toCharArray(message,58);
-       Serial.println(message);
-       //publish sensor data to MQTT broker
-      client.publish("sensor/button", message);
-     }
+    delay(2000);
+    float temperature;
+    float humidity;
+    sht4x.measureHighPrecision(temperature, humidity);
+        {
+        Serial.print("Temperature:");
+        Serial.print(temperature);
+        Serial.print("\t");
+        Serial.print("Humidity:");
+        Serial.println(humidity);
+        char msg_out1[2];
+        dtostrf(temperature,0,2,msg_out1);
+        client.publish("sensor/temp", msg_out1);
+        char msg_out2[2];
+        dtostrf(humidity,0,2,msg_out2);
+        client.publish("sensor/humidity", msg_out2);
     }
-     
 }
