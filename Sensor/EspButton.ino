@@ -80,7 +80,7 @@ void loop() {
   client.loop();
   int status;
   status=digitalRead(BUTTON1_PIN);
-  //send message if pressed
+  //send message if button pressed
   if (status==LOW ) 
   {;
     digitalWrite(LED_BUILTIN, HIGH);
