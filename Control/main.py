@@ -1,13 +1,15 @@
+from time import sleep
+
 from mqtt_handler import MQTTHandler
 
 
 def main():
-    handler = MQTTHandler("localhost", 2000)
+    handler = MQTTHandler("192.168.1.149", 1883)
     handler.connect()
-    handler.sensor_subscribe("test")
-    handler.subscribe("test2")
-    handler.subscribe("sensor")
+    handler.sensor_subscribe("temp")
+    handler.sensor_subscribe("button")
     while True:
+        sleep(1)
         pass
 
 

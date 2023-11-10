@@ -1,6 +1,8 @@
 import json
-import paho.mqtt.client as mqtt
+import datetime
 
+import paho.mqtt.client as mqtt
+from database_handler import DatabaseHandler
 
 class MQTTHandler:
     def __init__(self, broker, port):
@@ -11,6 +13,8 @@ class MQTTHandler:
         self.port = port
 
         self._load_credentials()
+        self.db_handler = DatabaseHandler("sensor_data.db")
+        self.db_handler.create_db()
 
     def connect(self):
         self.client.username_pw_set(self.credentials["username"], self.credentials["password"])
@@ -31,7 +35,8 @@ class MQTTHandler:
         self.client.subscribe(topic, qos)
 
     def _sensor_receive(self, client, topic, message):
-        print("Received message: " + str(message.payload.decode("utf-8")) + " on topic " + str(message.topic) + "with QoS " + str(message.qos))
+        self.db_handler.insert_data(1, message.topic, message.payload.decode("utf-8"), datetime.datetime.now())
+        print("Received message: " + str(message.payload.decode("utf-8")) + " on topic " + str(message.topic) + " with QoS " + str(message.qos))
 
     def _on_message(self, client, userdata, message):
         print("fallback", message.topic, message.payload)
