@@ -8,6 +8,7 @@ def main():
     handler.connect()
     handler.sensor_subscribe("temp")
     handler.sensor_subscribe("button")
+    handler.sensor_subscribe("humidity")
     while True:
         sleep(1)
         pass

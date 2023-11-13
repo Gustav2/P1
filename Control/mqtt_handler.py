@@ -35,6 +35,8 @@ class MQTTHandler:
         self.client.subscribe(topic, qos)
 
     def _sensor_receive(self, client, topic, message):
+        if message.retain == 1:
+            return
         self.db_handler.insert_data(1, message.topic, message.payload.decode("utf-8"), datetime.datetime.now())
         print("Received message: " + str(message.payload.decode("utf-8")) + " on topic " + str(message.topic) + " with QoS " + str(message.qos))
 
