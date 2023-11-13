@@ -5,6 +5,11 @@
 #include <PubSubClient.h>
 #include <string>
 
+//Red wire 3.3v
+//Black wire ground
+//Yellow wire on pin 9 (SCL)
+//White wire on pin 8 (SDA)
+
 SensirionI2CSht4x sht4x;
 
 const char* ssid = "P1";//put your wifi ssid here
