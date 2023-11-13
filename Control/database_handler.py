@@ -14,5 +14,6 @@ class DatabaseHandler:
         self.con.commit()
 
     def insert_data(self, uid, topic, value, timestamp):
-        self.cursor.execute("INSERT INTO sensor_data VALUES (?, ?, ?, ?)", (uid, topic, value, timestamp))
+        self.cursor.execute(
+            "INSERT INTO sensor_data VALUES (?, ?, ?, ?)", (uid, topic, value, timestamp))
         self.con.commit()
