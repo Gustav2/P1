@@ -87,11 +87,6 @@ void loop() {
     float humidity;
     sht4x.measureHighPrecision(temperature, humidity);
         {
-        Serial.print("Temperature:");
-        Serial.print(temperature);
-        Serial.print("\t");
-        Serial.print("Humidity:");
-        Serial.println(humidity);
         char msg_out1[2];
         dtostrf(temperature,0,2,msg_out1);
         client.publish("sensor/temp", msg_out1);
