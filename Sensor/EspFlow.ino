@@ -3,7 +3,7 @@
 #include <PubSubClient.h>
 #include <string>
 
-#define SENSOR  6
+#define SENSOR  9
 
 const char* ssid = "P1";//put your wifi ssid here
 const char* password = "password1234";//put your wifi password here.
