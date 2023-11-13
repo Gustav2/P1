@@ -5,7 +5,7 @@
 
 //Red wire 5v
 //Black wire ground
-//Yello wire on #define SENSOR
+//Yellow wire on #define SENSOR
 #define SENSOR  9
 
 const char* ssid = "P1";//put your wifi ssid here
