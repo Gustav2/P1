@@ -1,9 +1,7 @@
-#include <Arduino.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
 //#include <string>
 #include <Ultrasonic.h>
-
 
 const char* ssid = "P1";//put your wifi ssid here
 const char* password = "password1234";//put your wifi password here.
@@ -13,8 +11,6 @@ Ultrasonic ultrasonic(9, 8);	// i format (trig, echo)
 
 WiFiClient espClient;
 PubSubClient client(espClient);
-long lastMsg = 0;
-char msg[50];
 
 void setup_wifi() { //Connect to wifi. While loop breaks when connected.
   WiFi.begin(ssid, password); 
@@ -25,25 +21,23 @@ void callback(char* topic, byte* payload, unsigned int length) {} //end callback
 
 void setup()
 {
-  setup_wifi();
-  client.setServer(mqtt_server, 1883);
-  client.setCallback(callback);
-  Serial.begin(115200);
-  while (!Serial) {
-      delay(100);
-  }
+  //Serial.begin(115200);
 }
 
+
 void loop() {
-  int distance = ultrasonic.read();
-  if (distance < 75) {
+  //delay(2000);
+  //Serial.println(ultrasonic.read());
+  if (ultrasonic.read() < 75) {
+    //Serial.print(ultrasonic.read());
+    //Serial.print("afstand under 75");
     setup_wifi();
     client.setServer(mqtt_server, 1883);
     client.setCallback(callback);
-    Serial.begin(115200);
+    client.connect("ESP32Button");
     char msg_out1[2];
-    dtostrf(distance,0,2,msg_out1);
-    client.publish("sensor/ultraDistance", msg_out1);       
+    dtostrf(ultrasonic.read(),0,2,msg_out1);
+    client.publish("sensor/ultraDistance", msg_out1);
+    //delay(2000);
     }
-  delay(100);
-  }
+}
