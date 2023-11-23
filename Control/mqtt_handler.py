@@ -14,7 +14,7 @@ class MQTTHandler:
         self.port = port
 
         self._load_credentials()
-        self.db_handler = DatabaseHandler("sensor_data.db")
+        self.db_handler = DatabaseHandler("main.db")
         self.db_handler.create_db()
 
     def connect(self):
