@@ -7,7 +7,7 @@ from database_handler import DatabaseHandler
 
 class MQTTHandler:
     def __init__(self, broker, port):
-        self.client = mqtt.Client()
+        self.client = mqtt.Client(client_id="Home")
         self.credentials = None
         self.base_topic = "sensor/"
         self.broker = broker
@@ -20,6 +20,9 @@ class MQTTHandler:
     def connect(self):
         self.client.username_pw_set(
             self.credentials["username"], self.credentials["password"])
+        print("Connecting to broker", self.broker, "on port", self.port)
+        print("Client ID:", self.client._client_id)
+        print("Credentials:", self.credentials)
         self.client.on_message = self._on_message
 
         self.client.connect(self.broker, self.port)
@@ -37,11 +40,11 @@ class MQTTHandler:
     def subscribe(self, topic, qos=2):
         self.client.subscribe(topic, qos)
 
-    def _sensor_receive(self, client, topic, message):
+    def _sensor_receive(self, client, userdata, message):
         if message.retain == 1:
             return
         self.db_handler.insert_data(
-            1, message.topic, message.payload.decode("utf-8"), datetime.datetime.now())
+            message.topic.split("/")[1], message.topic, message.payload.decode("utf-8"), datetime.datetime.now())
         print("Received message: " + str(message.payload.decode("utf-8")) +
               " on topic " + str(message.topic) + " with QoS " + str(message.qos))
 
