@@ -6,12 +6,12 @@ from database_handler import DatabaseHandler
 
 
 class MQTTHandler:
-    def __init__(self, broker, port):
+    def __init__(self):
         self.client = mqtt.Client(client_id="Home")
         self.credentials = None
         self.base_topic = "sensor/"
-        self.broker = broker
-        self.port = port
+        self.broker = None
+        self.port = None
 
         self._load_credentials()
         self.db_handler = DatabaseHandler("main.db")
@@ -52,5 +52,9 @@ class MQTTHandler:
         print("fallback", message.topic, message.payload)
 
     def _load_credentials(self):
-        with open("credentials.json") as f:
-            self.credentials = json.load(f)
+        with open("config.json") as f:
+            data = json.load(f)
+            self.credentials = {"username": data["username"], "password": data["password"]}
+            self.broker = data["broker"]
+            self.port = data["port"]
+

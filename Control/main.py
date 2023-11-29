@@ -3,7 +3,7 @@ from flask import Flask
 from mqtt_handler import MQTTHandler
 
 app = Flask(__name__)
-handler = MQTTHandler("192.168.1.149", 1883)
+handler = MQTTHandler()
 handler.connect()
 
 
