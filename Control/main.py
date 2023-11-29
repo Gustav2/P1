@@ -1,21 +1,26 @@
-from time import sleep
+from flask import Flask
 
 from mqtt_handler import MQTTHandler
 
+app = Flask(__name__)
+handler = MQTTHandler("192.168.1.149", 1883)
+handler.connect()
+
 
 def main():
-    handler = MQTTHandler("192.168.1.149", 1883)
-    handler.connect()
     handler.sensor_subscribe("temp")
     handler.sensor_subscribe("button")
     handler.sensor_subscribe("humidity")
     handler.sensor_subscribe("flowRate")
     handler.sensor_subscribe("flowTotal")
     handler.sensor_subscribe("alive")
-    while True:
-        sleep(1)
-        pass
+
+
+@app.route("/")
+def hello():
+    return "Hello World!"
 
 
 if __name__ == "__main__":
     main()
+    app.run(host="0.0.0.0", port=8080)

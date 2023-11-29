@@ -1,5 +1,4 @@
 import sqlite3
-import time
 
 
 class DatabaseHandler:
@@ -11,9 +10,15 @@ class DatabaseHandler:
     def create_db(self):
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS sensor_data
             (uid text, topic text, value text, timestamp text)''')
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS sensors_subscribed (topic text UNIQUE, type text)''')
         self.con.commit()
 
     def insert_data(self, uid, topic, value, timestamp):
         self.cursor.execute(
             "INSERT INTO sensor_data VALUES (?, ?, ?, ?)", (uid, topic, value, timestamp))
+        self.con.commit()
+
+    def add_sensor(self, topic, type):
+        self.cursor.execute(
+            "INSERT INTO sensors_subscribed VALUES (?, ?)", (topic, type))
         self.con.commit()
