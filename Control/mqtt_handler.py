@@ -28,8 +28,9 @@ class MQTTHandler:
 
         self.client.connect(self.broker, self.port)
         self.client.message_callback_add(
-            self.base_topic+"#", self._sensor_receive)
+            self.base_topic + "#", self._sensor_receive)
         self.client.loop_start()
+        self._add_db_sensors()
 
     def disconnect(self):
         self.client.loop_stop()
@@ -39,15 +40,19 @@ class MQTTHandler:
         try:
             self.db_handler.add_sensor(self.base_topic + topic, "topic")
             self.client.subscribe(self.base_topic + topic, qos)
+            return "Successfully subscribed to " + topic
         except sqlite3.IntegrityError:
-            print("Sensor already exists")
-            return
-
-
-
+            return "Sensor already exists - not added"
 
     def subscribe(self, topic, qos=2):
         self.client.subscribe(topic, qos)
+
+    def _add_db_sensors(self):
+        sensors = self.db_handler.get_all_sensors()
+        for sensor in sensors:
+            print(sensor)
+            print("Subscribing to", sensor[0])
+            self.client.subscribe(sensor[0], 2)
 
     def _sensor_receive(self, client, userdata, message):
         if message.retain == 1:
@@ -66,4 +71,3 @@ class MQTTHandler:
             self.credentials = {"username": data["username"], "password": data["password"]}
             self.broker = data["broker"]
             self.port = data["port"]
-

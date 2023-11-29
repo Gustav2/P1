@@ -7,6 +7,7 @@ handler = MQTTHandler()
 handler.connect()
 
 
+
 """def main():
     handler.sensor_subscribe("temp")
     handler.sensor_subscribe("button")
@@ -23,13 +24,13 @@ def index():
 
 @app.route("/sensor", methods=["GET", "POST"])
 def sensor():
+    msg = ""
     if request.method == "POST":
-        handler.sensor_subscribe(request.form["topic"])
-        return render_template("sensor_add.html")
+        msg = handler.sensor_subscribe(request.form["topic"])
 
-    return render_template("sensor_add.html")
+    return render_template("sensor_add.html", msg=msg, sensors=handler.db_handler.get_all_sensors())
 
 
 if __name__ == "__main__":
-    main()
+    # main()
     app.run(host="0.0.0.0", port=8080)
