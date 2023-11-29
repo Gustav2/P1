@@ -31,8 +31,8 @@ def sensor():
 @app.route("/sensor/<path:text>/delete", methods=["GET", "POST"])
 def unsubscribe(text):
     print(text)
-    handler.unsubscribe("sensor/" + text)
-    handler.db_handler.remove_sensor("sensor/" + text)
+    handler.unsubscribe(handler.base_topic + text)
+    handler.db_handler.remove_sensor(handler.base_topic + text)
 
     return redirect("/sensor")
 
