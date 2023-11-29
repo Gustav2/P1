@@ -11,6 +11,7 @@ def main():
     handler.sensor_subscribe("humidity")
     handler.sensor_subscribe("flowRate")
     handler.sensor_subscribe("flowTotal")
+    handler.sensor_subscribe("alive")
     while True:
         sleep(1)
         pass
