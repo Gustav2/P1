@@ -10,7 +10,7 @@ class DatabaseHandler:
     def create_db(self):
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS sensor_data
             (uid text, topic text, value text, timestamp text)''')
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS sensors_subscribed (topic text UNIQUE, type text)''')
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS sensors_subscribed (uid text, topic text UNIQUE, type text)''')
         self.con.commit()
 
     def insert_data(self, uid, topic, value, timestamp):
@@ -18,9 +18,15 @@ class DatabaseHandler:
             "INSERT INTO sensor_data VALUES (?, ?, ?, ?)", (uid, topic, value, timestamp))
         self.con.commit()
 
-    def add_sensor(self, topic, type):
+    def add_sensor(self, uid, topic, sensor_type):
         self.cursor.execute(
-            "INSERT INTO sensors_subscribed VALUES (?, ?)", (topic, type))
+            "INSERT INTO sensors_subscribed VALUES (?, ?, ?)", (uid, topic, sensor_type))
+        self.con.commit()
+
+    def remove_sensor(self, topic):
+        print("Removing sensor", topic)
+        self.cursor.execute(
+            "DELETE FROM sensors_subscribed WHERE topic=?", (topic,))
         self.con.commit()
 
     def get_all_sensors(self):

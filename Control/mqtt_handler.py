@@ -38,7 +38,7 @@ class MQTTHandler:
 
     def sensor_subscribe(self, topic, qos=2):
         try:
-            self.db_handler.add_sensor(self.base_topic + topic, "topic")
+            self.db_handler.add_sensor(topic, self.base_topic + topic, "topic")
             self.client.subscribe(self.base_topic + topic, qos)
             return "Successfully subscribed to " + topic
         except sqlite3.IntegrityError:
@@ -46,6 +46,9 @@ class MQTTHandler:
 
     def subscribe(self, topic, qos=2):
         self.client.subscribe(topic, qos)
+
+    def unsubscribe(self, topic):
+        self.client.unsubscribe(topic)
 
     def _add_db_sensors(self):
         sensors = self.db_handler.get_all_sensors()

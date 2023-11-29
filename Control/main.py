@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 
 from mqtt_handler import MQTTHandler
 
@@ -6,15 +6,12 @@ app = Flask(__name__)
 handler = MQTTHandler()
 handler.connect()
 
-
-
-"""def main():
-    handler.sensor_subscribe("temp")
-    handler.sensor_subscribe("button")
-    handler.sensor_subscribe("humidity")
-    handler.sensor_subscribe("flowRate")
-    handler.sensor_subscribe("flowTotal")
-    handler.sensor_subscribe("alive")"""
+"""handler.sensor_subscribe("temp")
+handler.sensor_subscribe("button")
+handler.sensor_subscribe("humidity")
+handler.sensor_subscribe("flowRate")
+handler.sensor_subscribe("flowTotal")
+handler.sensor_subscribe("alive")"""
 
 
 @app.route("/")
@@ -29,6 +26,15 @@ def sensor():
         msg = handler.sensor_subscribe(request.form["topic"])
 
     return render_template("sensor_add.html", msg=msg, sensors=handler.db_handler.get_all_sensors())
+
+
+@app.route("/sensor/<path:text>/delete", methods=["GET", "POST"])
+def unsubscribe(text):
+    print(text)
+    handler.unsubscribe("sensor/" + text)
+    handler.db_handler.remove_sensor("sensor/" + text)
+
+    return redirect("/sensor")
 
 
 if __name__ == "__main__":

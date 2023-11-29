@@ -26,10 +26,16 @@
         <thead>
         <tr>
             <th class="border-b-2 p-4 dark:border-dark-5 whitespace-nowrap font-normal text-gray-900">
+                UID
+            </th>
+            <th class="border-b-2 p-4 dark:border-dark-5 whitespace-nowrap font-normal text-gray-900">
                 Topic
             </th>
             <th class="border-b-2 p-4 dark:border-dark-5 whitespace-nowrap font-normal text-gray-900">
                 Mode
+            </th>
+            <th class="border-b-2 p-4 dark:border-dark-5 whitespace-nowrap font-normal text-gray-900">
+
             </th>
         </tr>
         </thead>
@@ -41,6 +47,14 @@
             </td>
             <td class="border-b-2 p-4 dark:border-dark-5">
                 {{sensor[1]}}
+            </td>
+            <td class="border-b-2 p-4 dark:border-dark-5">
+                {{sensor[2]}}
+            </td>
+            <td class="border-b-2 p-4 dark:border-dark-5">
+                <form method="post" action="/sensor/{{sensor[0]}}/delete">
+                    <button>Unsubscribe</button>
+                </form>
             </td>
         </tr>
         {% endfor %}
