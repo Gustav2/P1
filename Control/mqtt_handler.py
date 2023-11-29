@@ -1,5 +1,6 @@
 import json
 import datetime
+import sqlite3
 
 import paho.mqtt.client as mqtt
 from database_handler import DatabaseHandler
@@ -35,7 +36,15 @@ class MQTTHandler:
         self.client.disconnect()
 
     def sensor_subscribe(self, topic, qos=2):
-        self.client.subscribe(self.base_topic + topic, qos)
+        try:
+            self.db_handler.add_sensor(self.base_topic + topic, "topic")
+            self.client.subscribe(self.base_topic + topic, qos)
+        except sqlite3.IntegrityError:
+            print("Sensor already exists")
+            return
+
+
+
 
     def subscribe(self, topic, qos=2):
         self.client.subscribe(topic, qos)

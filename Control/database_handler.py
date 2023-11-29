@@ -22,3 +22,12 @@ class DatabaseHandler:
         self.cursor.execute(
             "INSERT INTO sensors_subscribed VALUES (?, ?)", (topic, type))
         self.con.commit()
+
+    def get_all_sensors(self):
+        self.cursor.execute("SELECT * FROM sensors_subscribed")
+        return self.cursor.fetchall()
+
+
+if __name__ == '__main__':
+    db = DatabaseHandler("main.db")
+    print(db.get_all_sensors())
