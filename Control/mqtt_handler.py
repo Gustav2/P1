@@ -14,7 +14,7 @@ class MQTTHandler:
         self.broker = None
         self.port = None
 
-        self._load_credentials()
+        self._load_config()
         self.db_handler = DatabaseHandler("main.db")
         self.db_handler.create_db()
 
@@ -38,7 +38,7 @@ class MQTTHandler:
 
     def sensor_subscribe(self, topic, qos=2):
         try:
-            self.db_handler.add_sensor(topic, self.base_topic + topic, "topic")
+            self.db_handler.add_sensor(topic, self.base_topic + topic, "mode 1")
             self.client.subscribe(self.base_topic + topic, qos)
             return "Successfully subscribed to " + topic
         except sqlite3.IntegrityError:
@@ -68,7 +68,7 @@ class MQTTHandler:
     def _on_message(self, client, userdata, message):
         print("fallback", message.topic, message.payload)
 
-    def _load_credentials(self):
+    def _load_config(self):
         with open("config.json") as f:
             data = json.load(f)
             self.credentials = {"username": data["username"], "password": data["password"]}
