@@ -1,0 +1,13 @@
+[Unit]
+Description=Mosquitto Broker Service
+After=network.target
+
+[Service]
+Restart=always
+RestartSec=1
+User=pi
+WorkingDirectory=/home/pi
+ExecStart=mosquitto -c mosquitto.conf
+
+[Install]
+WantedBy=multi-user.target
