@@ -8,14 +8,13 @@ class DatabaseHandler:
         self.cursor = self.con.cursor()
 
     def create_db(self):
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS sensors_subscribed (uid text, topic text UNIQUE, type text)''')
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS sensor_data (uid text, topic text, value text, timestamp datetime)''')
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS sensors_subscribed (uid text UNIQUE, topic text UNIQUE, type text)''')
         self.con.commit()
 
     def insert_data(self, uid, topic, value, timestamp):
-        self.cursor.execute(f'''CREATE TABLE IF NOT EXISTS {uid}
-                    (topic text, value text, timestamp text)''')
         self.cursor.execute(
-            f"INSERT INTO {uid} VALUES (?, ?, ?)", (topic, value, timestamp))
+            f"INSERT INTO sensor_data VALUES (?, ?, ?, ?)", (uid, topic, value, timestamp))
         self.con.commit()
 
     def add_sensor(self, uid, topic, sensor_type):
@@ -29,7 +28,7 @@ class DatabaseHandler:
             "DELETE FROM sensors_subscribed WHERE topic=?", (topic,))
         self.con.commit()
 
-    def get_all_sensors(self):
+    def get_all_sensors(self) -> list[tuple]:
         self.cursor.execute("SELECT * FROM sensors_subscribed")
         return self.cursor.fetchall()
 
