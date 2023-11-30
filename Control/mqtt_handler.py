@@ -54,8 +54,8 @@ class MQTTHandler:
         sensors = self.db_handler.get_all_sensors()
         for sensor in sensors:
             print(sensor)
-            print("Subscribing to", sensor[0])
-            self.client.subscribe(sensor[0], 2)
+            print("Subscribing to", sensor[1])
+            self.client.subscribe(sensor[1], 2)
 
     def _sensor_receive(self, client, userdata, message):
         if message.retain == 1:
