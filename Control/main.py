@@ -7,12 +7,7 @@ handler = MQTTHandler()
 handler.connect()
 
 
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-
-@app.route("/sensor", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def sensor():
     msg = ""
     if request.method == "POST":
@@ -33,7 +28,7 @@ def unsubscribe(text):
     handler.unsubscribe(handler.base_topic + text)
     handler.db_handler.remove_sensor(handler.base_topic + text)
 
-    return redirect("/sensor")
+    return redirect("/")
 
 
 if __name__ == "__main__":
