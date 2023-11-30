@@ -43,7 +43,7 @@
         {% for sensor in sensors %}
         <tr class="text-gray-700">
             <td class="border-b-2 p-4 dark:border-dark-5">
-                {{sensor[0]}}
+                <a href="/sensor/{{sensor[0]}}" class="text-green-800">{{sensor[0]}}</a>
             </td>
             <td class="border-b-2 p-4 dark:border-dark-5">
                 {{sensor[1]}}

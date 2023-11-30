@@ -21,6 +21,12 @@ def sensor():
     return render_template("sensor_add.html", msg=msg, sensors=handler.db_handler.get_all_sensors())
 
 
+@app.route("/sensor/<path:text>", methods=["GET"])
+def sensor_data(text):
+    data = handler.db_handler.get_data(text)
+    return render_template("sensor_data.html", data=data, uid=text)
+
+
 @app.route("/sensor/<path:text>/delete", methods=["POST"])
 def unsubscribe(text):
     print(text)
