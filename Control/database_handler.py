@@ -8,18 +8,33 @@ class DatabaseHandler:
         self.cursor = self.con.cursor()
 
     def create_db(self):
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS sensor_data (uid text, topic text, value text, timestamp datetime)''')
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS sensors_subscribed (uid text UNIQUE, topic text UNIQUE, type text)''')
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS sensor_data 
+            (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                uid text, 
+                topic text, 
+                value text, 
+                timestamp datetime
+            )
+        ''')
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS sensors_subscribed 
+            (
+                uid text UNIQUE PRIMARY KEY, 
+                topic text UNIQUE, 
+                type text,
+                FOREIGN KEY (uid) REFERENCES sensor_data (uid)
+            )
+        ''')
         self.con.commit()
 
     def insert_data(self, uid, topic, value, timestamp):
         self.cursor.execute(
-            f"INSERT INTO sensor_data VALUES (?, ?, ?, ?)", (uid, topic, value, timestamp))
+            f"INSERT INTO sensor_data (uid, topic, value, timestamp) VALUES (?, ?, ?, ?)", (uid, topic, value, timestamp))
         self.con.commit()
 
     def add_sensor(self, uid, topic, sensor_type):
         self.cursor.execute(
-            "INSERT INTO sensors_subscribed VALUES (?, ?, ?)", (uid, topic, sensor_type))
+            "INSERT INTO sensors_subscribed (uid, topic, type) VALUES (?, ?, ?)", (uid, topic, sensor_type))
         self.con.commit()
 
     def remove_sensor(self, topic):
