@@ -32,6 +32,11 @@ class DatabaseHandler:
             f"INSERT INTO sensor_data (uid, topic, value, timestamp) VALUES (?, ?, ?, ?)", (uid, topic, value, timestamp))
         self.con.commit()
 
+    def get_data(self, uid):
+        self.cursor.execute(
+            f"SELECT * FROM sensor_data WHERE uid=?", (uid,))
+        return self.cursor.fetchall()
+
     def add_sensor(self, uid, topic, sensor_type):
         self.cursor.execute(
             "INSERT INTO sensors_subscribed (uid, topic, type) VALUES (?, ?, ?)", (uid, topic, sensor_type))
