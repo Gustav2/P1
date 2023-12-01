@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Add Sensor{% endblock %}
+{% block content %}
+
+<div class="justify-center items-center mx-auto mt-12">
+
+
+    <form method="post" class="mb-12">
+        <div class="flex relative mb-4">
+    <span class="rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
+        sensor/
+    </span>
+            <input type="text"
+                   class=" rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                   name="topic" placeholder="humidity"/>
+        </div>
+
+        <button type="submit"
+                class="py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
+            Add sensor
+        </button>
+    </form>
+    <h1>{{ msg }}</h1>
+
+    <table class="table p-4 bg-gray-300 rounded-lg shadow mx-auto">
+        <thead>
+        <tr>
+            <th class="border-b-2 p-4 dark:border-dark-5 whitespace-nowrap font-normal text-gray-900">
+                UID
+            </th>
+            <th class="border-b-2 p-4 dark:border-dark-5 whitespace-nowrap font-normal text-gray-900">
+                Topic
+            </th>
+            <th class="border-b-2 p-4 dark:border-dark-5 whitespace-nowrap font-normal text-gray-900">
+                Mode
+            </th>
+            <th class="border-b-2 p-4 dark:border-dark-5 whitespace-nowrap font-normal text-gray-900">
+
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for sensor in sensors %}
+        <tr class="text-gray-700">
+            <td class="border-b-2 p-4 dark:border-dark-5">
+                <a href="/sensor/{{sensor[0]}}" class="text-blue-500 hover:text-blue-800 transition duration-300 ease-in-out">{{sensor[0]}}</a>
+            </td>
+            <td class="border-b-2 p-4 dark:border-dark-5">
+                {{sensor[1]}}
+            </td>
+            <td class="border-b-2 p-4 dark:border-dark-5">
+                {{sensor[2]}}
+            </td>
+            <td class="border-b-2 p-4 dark:border-dark-5">
+                <form method="post" action="/sensor/{{sensor[0]}}/delete">
+                    <button class="text-red-500 hover:text-red-800 transition duration-300 ease-in-out">Unsubscribe</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock %}
