@@ -6,7 +6,7 @@
 //fsrPin på det andet ben.
 //Ground pin på en 10k ohm resistor.
 
-int fsrPin = 4;         // FSR og 10K pulldown er forbundet til a0
+int fsrPin = 9;         // FSR og 10K pulldown er forbundet til a0
 int fsrReading;         // Analog læsning fra FSR resistordeler
 int previousState = -1; // Initialiser den forrige tilstand
 
