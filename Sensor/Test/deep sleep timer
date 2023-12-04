@@ -4,6 +4,14 @@
 
 #define INTERRUPT_PIN 2 //green button (yellow wire)
 
+RTC_DATA_ATTR unsigned int timeStart = 0;
+RTC_DATA_ATTR unsigned int timeNow = 0;
+
+
+int one_sec  = 1000000; //micro second to 1 one second
+int time_to_midnight;
+
+
 const char* ssid = "P1"; //wifi ssid
 const char* password = "password1234"; //wifi password
 const char* mqtt_server = "192.168.1.149"; //mqtt server ip
@@ -17,9 +25,6 @@ void setup_wifi() {
   while (WiFi.status() != WL_CONNECTED);
 }
 
-RTC_DATA_ATTR unsigned int timeStart = 0;
-RTC_DATA_ATTR unsigned int timeNow = 0;
-
 // Function that gets current epoch time
 unsigned long getTime() {
   time_t now;
@@ -31,12 +36,10 @@ unsigned long getTime() {
 
 void setup() {
   Serial.begin(115200);
-
   setup_wifi();
   client.setServer(mqtt_server, 1883);
   client.connect("ESP32Button");
   configTime(3600, 0, ntpServer);
-  Serial.println(timeStart);
   
   timeNow = getTime(); 
 
@@ -45,15 +48,15 @@ void setup() {
   }
 
   if (esp_sleep_get_wakeup_cause() == 4) {
-  client.publish("sensor/temp", "message213");
+  client.publish("sensor/test", "ur");
   }
 
   if (esp_sleep_get_wakeup_cause() == 7) {
-  client.publish("sensor/temp", "message");
+  client.publish("sensor/test", "knap");
   }
 
   esp_deep_sleep_enable_gpio_wakeup(1 << INTERRUPT_PIN, ESP_GPIO_WAKEUP_GPIO_LOW);
-  esp_sleep_enable_timer_wakeup(timeNow - (timeStart + 10000000));
+  esp_sleep_enable_timer_wakeup((timeStart - timeNow + time_to_midnight) * one_sec);
   esp_deep_sleep_start();
 }
 
