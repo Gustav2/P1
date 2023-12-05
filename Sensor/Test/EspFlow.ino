@@ -18,6 +18,7 @@ PubSubClient client(espClient);
 
 RTC_DATA_ATTR unsigned int time_to_midnight;
 int one_sec  = 1000000; //micro second to 1 one second
+int previousState = -1;
 
 long currentMillis = 0;
 long previousMillis = 0;
@@ -50,7 +51,6 @@ void IRAM_ATTR pulseCounter()
 
 void setup()
 {
-  Serial.begin(115200);
   setup_wifi();
   client.setServer(mqtt_server, 1883);
   client.connect("ESP32Flow");
@@ -68,8 +68,9 @@ void setup()
   time_to_midnight = 86400 - (getTime() % 86400);
 }
 
-void loop()
-{ int status;
+void loop() { 
+  delay(50);
+  int status;
   time_to_midnight = 86400 - (getTime() % 86400);
   Serial.println(time_to_midnight);
   if (time_to_midnight == 0) {
@@ -77,7 +78,6 @@ void loop()
   }
 
   client.loop();
-    delay(2000);
     currentMillis = millis();
     if (currentMillis - previousMillis > interval) {
       
@@ -88,14 +88,17 @@ void loop()
       flowMilliLitres = (flowRate / 60) * 1000;
 
       totalMilliLitres += flowMilliLitres;
-      if (flowRate > 0) { 
-      char msg_out1[2];
-      dtostrf(flowRate,0,2,msg_out1);
-      client.publish("sensor/flowRate", msg_out1);
-      char msg_out2[2];
-      dtostrf(totalMilliLitres,0,2,msg_out2);
-      client.publish("sensor/flowTotal", msg_out2);
-      delay(50);
+      if (flowRate > 0 && previousState != 0) { 
+        client.publish("sensor/flowRate", "start");
+        previousState = 0;
+      }
+      else if (flowRate == 0  && previousState != 1) {
+         client.publish("sensor/flowRate", "stop");
+         char msg_out[1];
+         dtostrf(totalMilliLitres,0,1,msg_out);
+         client.publish("sensor/flowTotal", msg_out);
+         totalMilliLitres = 0;
+         previousState = 1;
       } 
       
   }
