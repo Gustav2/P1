@@ -16,7 +16,7 @@ plt.axline((33.374, 0), (33.374, 1), linestyle = "dashed", color = "red")
 
 plt.margins(y=0.5)
 
-plt.title('Detection of person by PIR sensor')
+plt.title('Detection of person by PIR Sensor HC-SR501')
 plt.xlabel('Time (sec)')
 plt.ylabel('Person')
 plt.legend(loc="lower right")
