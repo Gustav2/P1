@@ -35,8 +35,10 @@ def unsubscribe(text):
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
     if request.method == "POST":
+        host = request.form.get("host")
+        port = request.form.get("port")
         with open('main.db', 'rb') as f:
-            r = requests.post('http://127.0.0.1:5000', files={'main.db': f})
+            r = requests.post(f'http://{host}:{port}', files={'main.db': f})
             print(r.status_code)
             print("Uploaded")
     return render_template("upload.html")
