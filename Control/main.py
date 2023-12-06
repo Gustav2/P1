@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect
+import requests
 
 from mqtt_handler import MQTTHandler
 
@@ -29,6 +30,16 @@ def unsubscribe(text):
     handler.db_handler.remove_sensor(handler.base_topic + text)
 
     return redirect("/")
+
+
+@app.route("/upload", methods=["GET", "POST"])
+def upload():
+    if request.method == "POST":
+        with open('main.db', 'rb') as f:
+            r = requests.post('http://127.0.0.1:5000', files={'main.db': f})
+            print(r.status_code)
+            print("Uploaded")
+    return render_template("upload.html")
 
 
 if __name__ == "__main__":
