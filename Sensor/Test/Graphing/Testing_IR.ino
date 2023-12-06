@@ -14,7 +14,6 @@ int BUTTON2_PIN = 3; //Red button
 
 void setup() {
   Serial.begin(115200); // start the serial port
-  pinMode(LED_BUILTIN, OUTPUT);
   pinMode(BUTTON1_PIN,INPUT);
 }
 
@@ -22,7 +21,7 @@ void loop() {
   // 5v
   float volts = analogRead(sensor)*0.0048828125;  // value from sensor * (5/1024)
   int distance = 13*pow(volts, -1); // worked out from datasheet graph
-  delay(100); // slow down serial port 
+  delay(50); // slow down serial port 
   
   Serial.println(distance);   // print the distance
 
