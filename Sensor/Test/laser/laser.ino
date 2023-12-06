@@ -11,7 +11,7 @@ PubSubClient client(espClient);
 // ved resistor: grøn = ground, hvid = 0, brun = 5v 
 // ved laser: orange = ground, hvid = 5v
 
-int ldr = 0; //analog pin to which LDR is connected
+int ldr = 2; //analog pin to which LDR is connected
 int ldr_value = 0; //variable to store LDR values
 int old_ldr = 0;
 
@@ -24,12 +24,15 @@ void setup() {
   setup_wifi();
   client.setServer(mqtt_server, 1883);
   client.connect("ESP32Laser");
+  Serial.begin(9600);
+  pinMode(ldr,INPUT);
 }
 
 void loop() {
-  ldr_value = analogRead(ldr); //reads the LDR values
+  ldr_value = analogRead(ldr); //reads the LDR valuecd s
   delay(100); //wait
-  if (abs(ldr_value - old_ldr) >=200 && ldr_value < 600) {
+  if (abs(ldr_value - old_ldr) >= 500 && ldr_value < 1000) {
+    Serial.println("Smukt");
     client.publish("sensor/door","Person gik igennem");
   }
   old_ldr = ldr_value;
