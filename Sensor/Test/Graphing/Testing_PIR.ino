@@ -5,7 +5,7 @@ int inputPin = 7;                             // set input from PIR to pin 7
 int digitalReadValue;                         // set variable digitalReadValue for store state of PIR input
 
 void setup() {
-  Serial.begin(9600);                         // start serial communication
+  Serial.begin(115200);                         // start serial communication
   pinMode(inputPin, INPUT);                   // set inputPin to INPUT
   pinMode(BUTTON1_PIN,INPUT);
 }
