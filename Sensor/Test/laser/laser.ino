@@ -29,10 +29,9 @@ void setup() {
 }
 
 void loop() {
-  ldr_value = analogRead(ldr); //reads the LDR valuecd s
-  delay(100); //wait
+  ldr_value = analogRead(ldr); //reads the LDR values
+  delay(100); //waits
   if (abs(ldr_value - old_ldr) >= 500 && ldr_value < 1000) {
-    Serial.println("Smukt");
     client.publish("sensor/door","Person gik igennem");
   }
   old_ldr = ldr_value;
