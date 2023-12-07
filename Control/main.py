@@ -12,7 +12,10 @@ handler.connect()
 def sensor():
     msg = ""
     if request.method == "POST":
-        msg = handler.sensor_subscribe(request.form["topic"])
+        if request.form["topic"] == "":
+            msg = "Topic cannot be empty, you dumbass"
+        else:
+            msg = handler.sensor_subscribe(request.form["topic"])
 
     return render_template("sensor_add.html", msg=msg, sensors=handler.db_handler.get_all_sensors())
 
