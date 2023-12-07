@@ -1,0 +1,13 @@
+[Unit]
+Description=MQTT Handler and Website service
+After=network.target
+
+[Service]
+Restart=always
+RestartSec=1
+User=pi
+WorkingDirectory=/home/pi/Control
+ExecStart=source venv/bin/activate && python3 main.py
+
+[Install]
+WantedBy=multi-user.target
