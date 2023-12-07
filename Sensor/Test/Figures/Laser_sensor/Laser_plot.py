@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 df = pd.read_excel(r".\Test_laser_data.xlsx")
 
 plt.plot(df["Elapsed Time"], df["Detection"], color = "blue", label = "Laser Door Dectection") 
-plt.axline((2.32, 3000), (2.32, 0), color = "red", linestyle = "dashed", label = "Analog Value")
+plt.axline((2.32, 3000), (2.32, 0), color = "red", linestyle = "dashed", label = "Person")
 plt.axline((5.78, 3000), (5.78, 0), linestyle = "dashed", color = "red")
 plt.axline((9.01, 3000), (9.01, 0), linestyle = "dashed", color = "red")
 plt.axline((11.96, 3000), (11.96, 0), linestyle = "dashed", color = "red")
