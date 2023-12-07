@@ -2,11 +2,27 @@
 {% block title %}Upload Database{% endblock %}
 {% block content %}
 
-<h1>File Upload</h1>
-<form method="POST">
-    <input type="text" value="Host" name="host">
-    <input type="text" value="Port" name="port">
-    <input type="submit" value="Submit">
-</form>
+<div class="max-w-md mx-auto bg-white rounded p-6 shadow-md">
+    <h1 class="text-2xl font-bold mb-4">File Upload</h1>
+
+    <form method="POST" class="space-y-4">
+        <div class="mb-4">
+            <label for="host" class="block text-sm font-medium text-gray-600">Host</label>
+            <input type="text" id="host" name="host" class="mt-1 p-2 w-full border rounded-md">
+        </div>
+
+        <div class="mb-4">
+            <label for="port" class="block text-sm font-medium text-gray-600">Port</label>
+            <input type="text" id="port" name="port" class="mt-1 p-2 w-full border rounded-md">
+        </div>
+
+        <div>
+            <button type="submit"
+                    class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-800">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
 
 {% endblock %}
