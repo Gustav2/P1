@@ -1,15 +1,13 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, request
 
 app = Flask(__name__)
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["POST"])
 def index():
-    if request.method == "POST":
-        uploaded_file = request.files['main.db']
-        uploaded_file.save(uploaded_file.filename)
-        return {}
-    return render_template("index.html")
+    uploaded_file = request.files['main.db']
+    uploaded_file.save(uploaded_file.filename)
+    return {}
 
 
 if __name__ == "__main__":
