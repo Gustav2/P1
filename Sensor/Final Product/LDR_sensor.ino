@@ -8,7 +8,8 @@
 
 int LDR_Pin = 2;         // LDR og 10K pulldown er forbundet til 2
 int LDR_Reading;         // Analog læsning fra LDR
-int previousState = -1; // Initialiser den forrige tilstand
+int LDR_Threshold = 100; // Lys grænse for åbning af køleskab
+int Previous_State = -1; // Initialiser den forrige tilstand
 
 RTC_DATA_ATTR unsigned int time_to_midnight;
 int one_sec  = 1000000; //micro second to 1 one second
@@ -47,13 +48,13 @@ void loop() {
   time_to_midnight = 86400 - (getTime() % 86400);
 
   if (time_to_midnight == 0) {
-    client.publish("sensor/alive", "UID(123)");
+    client.publish("sensor/alive", "UID");
   }
 
-  if (LDR_Reading < 100 && previousState != 0) {
+  if (LDR_Reading <= LDR_Threshold && previousState != 0) {
     client.publish("sensor/LDR", "Køleskab Åben");
     previousState = 0;
-  } else if (LDR_Reading > 100 && previousState != 1) {
+  } else if (LDR_Reading > LDR_Threshold && previousState != 1) {
     client.publish("sensor/LDR", "Køleskab Lukket");
     previousState = 1;
   }
