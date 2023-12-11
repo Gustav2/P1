@@ -51,11 +51,11 @@ void loop() {
     client.publish("sensor/alive", "UID");
   }
 
-  if (LDR_Reading <= LDR_Threshold && previousState != 0) {
-    client.publish("sensor/LDR", "Køleskab Åben");
+  if (LDR_Reading >= LDR_Threshold && previousState != 0) {
+    client.publish("sensor/LDR", "Fridge_Open");
     previousState = 0;
-  } else if (LDR_Reading > LDR_Threshold && previousState != 1) {
-    client.publish("sensor/LDR", "Køleskab Lukket");
+  } else if (LDR_Reading < LDR_Threshold && previousState != 1) {
+    client.publish("sensor/LDR", "Fridge_Closed");
     previousState = 1;
   }
 }
