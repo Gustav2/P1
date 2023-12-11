@@ -43,7 +43,6 @@ void setup() {
 }
 
 void loop() {
-  int status;
   LDR_Reading = analogRead(LDR_Pin);
   time_to_midnight = 86400 - (getTime() % 86400);
 
