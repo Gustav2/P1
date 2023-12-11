@@ -42,6 +42,9 @@ void setup() {
   }
 
   time_to_midnight = 86400 - (getTime() % 86400);
+  if (time_to_midnight == 0) {
+  client.publish("sensor/alive", "UID");
+  }
   //set a wake up reason based on sensor.
   esp_sleep_enable_timer_wakeup(time_to_midnight * one_sec);
 
