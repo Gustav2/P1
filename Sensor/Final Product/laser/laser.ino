@@ -8,6 +8,7 @@ int one_sec  = 1000000; //micro second to 1 one second
 const char* ssid = "P1"; //wifi ssid
 const char* password = "password1234"; //wifi password
 const char* mqtt_server = "192.168.1.149"; //mqtt server ip
+const char* UID = "ESP32Laser"; //UID
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -36,15 +37,14 @@ unsigned long getTime() {
 void setup() {
   setup_wifi();
   client.setServer(mqtt_server, 1883);
-  client.connect("ESP32Laser");
-  Serial.begin(9600);
+  client.connect(UID);
   pinMode(ldr,INPUT);
 }
 
 void loop() {
   time_to_midnight = 86400 - (getTime() % 86400);
   if (time_to_midnight=0){
-    client.publish("sensor/alive", "Laser");
+    client.publish("sensor/alive", UID);
   }
   ldr_value = analogRead(ldr); //reads the LDR values
   delay(100); //waits
