@@ -10,7 +10,7 @@
 
 const char* ssid = "P1";//put your wifi ssid here
 const char* password = "password1234";//put your wifi password here.
-const char* mqtt_server = "192.168.1.149";git 
+const char* mqtt_server = "192.168.1.149";
 const char* ntpServer = "1.dk.pool.ntp.org"; //NTP server
 
 WiFiClient espClient;
@@ -92,7 +92,7 @@ void loop() {
       }
       else if (flowRate == 0  && previousState != 1) {
          client.publish("sensor/flowRate", "stop");
-         char msg_out[1];
+         char msg_out[10];
          dtostrf(totalMilliLitres,0,1,msg_out);
          client.publish("sensor/flowTotal", msg_out);
          totalMilliLitres = 0;
