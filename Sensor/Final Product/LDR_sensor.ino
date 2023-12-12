@@ -14,6 +14,7 @@ int Previous_State = -1; // Initialiser den forrige tilstand
 RTC_DATA_ATTR unsigned int time_to_midnight;
 int one_sec  = 1000000; //micro second to 1 one second
 
+const char* UID = "ESP32LDR"; //UID
 const char* ssid = "P1"; //wifi ssid
 const char* password = "password1234"; //wifi password
 const char* mqtt_server = "192.168.1.149"; //mqtt server ip
@@ -49,7 +50,7 @@ void loop() {
   time_to_midnight = 86400 - (getTime() % 86400);
 
   if (time_to_midnight == 0) {
-    client.publish("sensor/alive", "UID");
+    client.publish("sensor/alive", UID);
   }
 
   if (LDR_Reading >= LDR_Threshold && Previous_State != 0) {
