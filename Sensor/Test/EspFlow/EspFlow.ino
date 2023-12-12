@@ -8,9 +8,9 @@
 //Yellow wire on #define SENSOR
 #define SENSOR  9
 
-const char* ssid = "Fashion";//put your wifi ssid here
-const char* password = "for_the_aesthetic_tho_9B";//put your wifi password here.
-const char* mqtt_server = "192.168.0.106";
+const char* ssid = "P1";//put your wifi ssid here
+const char* password = "password1234";//put your wifi password here.
+const char* mqtt_server = "192.168.1.149";git 
 const char* ntpServer = "1.dk.pool.ntp.org"; //NTP server
 
 WiFiClient espClient;
@@ -76,8 +76,7 @@ void loop() {
     client.publish("sensor/alive", "ESP32Flow");
   }
 
-  client.loop();
-    currentMillis = millis(); git
+    currentMillis = millis();
     if (currentMillis - previousMillis > interval) {
       
       pulse1Sec = pulseCount;
