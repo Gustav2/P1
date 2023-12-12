@@ -44,6 +44,7 @@ void setup() {
 }
 
 void loop() {
+  delay(50);
   LDR_Reading = analogRead(LDR_Pin);
   time_to_midnight = 86400 - (getTime() % 86400);
 
@@ -51,11 +52,11 @@ void loop() {
     client.publish("sensor/alive", "UID");
   }
 
-  if (LDR_Reading >= LDR_Threshold && previousState != 0) {
+  if (LDR_Reading >= LDR_Threshold && Previous_State != 0) {
     client.publish("sensor/LDR", "Fridge_Open");
-    previousState = 0;
-  } else if (LDR_Reading < LDR_Threshold && previousState != 1) {
+    Previous_State = 0;
+  } else if (LDR_Reading < LDR_Threshold && Previous_State != 1) {
     client.publish("sensor/LDR", "Fridge_Closed");
-    previousState = 1;
+    Previous_State = 1;
   }
 }
