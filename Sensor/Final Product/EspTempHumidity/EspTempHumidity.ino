@@ -14,9 +14,9 @@ int one_sec  = 1000000; //micro second to 1 one second
 const char* uid = "ESP32Temp/Hum";
 SensirionI2CSht4x sht4x;
 
-const char* ssid = "P1";//put your wifi ssid here
-const char* password = "password1234";//put your wifi password here.
-const char* mqtt_server = "192.168.1.149";
+const char* ssid = "Fashion";//put your wifi ssid here
+const char* password = "for_the_aesthetic_tho_9B";//put your wifi password here.
+const char* mqtt_server = "192.168.0.106";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -27,7 +27,7 @@ void setup_wifi() { //Connect to wifi. While loop breaks when connected.
 }
 
 void setup() {
-    esp_sleep_enable_timer_wakeup(60000000*30); // 60000000==1 min 
+    esp_sleep_enable_timer_wakeup(2000); // 60000000==1 min * 30
     bootcount++;
     setup_wifi();
     client.setServer(mqtt_server, 1883);
@@ -42,11 +42,11 @@ void setup() {
     float humidity;
     sht4x.measureHighPrecision(temperature, humidity);
         {
-        char msg_out1[2];
+        char msg_out1[6];
         dtostrf(temperature,0,2,msg_out1);
         client.publish("sensor/temp", msg_out1);
         
-        char msg_out2[2];
+        char msg_out2[6];
         dtostrf(humidity,0,2,msg_out2);
         client.publish("sensor/humidity", msg_out2);
     }

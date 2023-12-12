@@ -8,9 +8,9 @@
 //Yellow wire on #define SENSOR
 #define SENSOR  9
 
-const char* ssid = "P1";//put your wifi ssid here
-const char* password = "password1234";//put your wifi password here.
-const char* mqtt_server = "192.168.1.149";
+const char* ssid = "Fashion";//put your wifi ssid here
+const char* password = "for_the_aesthetic_tho_9B";//put your wifi password here.
+const char* mqtt_server = "192.168.0.106";
 const char* ntpServer = "1.dk.pool.ntp.org"; //NTP server
 
 WiFiClient espClient;
@@ -23,7 +23,7 @@ int previousState = -1;
 long currentMillis = 0;
 long previousMillis = 0;
 int interval = 1000;
-float calibrationFactor = 4.5;
+float calibrationFactor = 7.5;
 volatile byte pulseCount;
 byte pulse1Sec = 0;
 float flowRate;
@@ -72,18 +72,17 @@ void loop() {
   delay(50);
   int status;
   time_to_midnight = 86400 - (getTime() % 86400);
-  Serial.println(time_to_midnight);
   if (time_to_midnight == 0) {
     client.publish("sensor/alive", "ESP32Flow");
   }
 
   client.loop();
-    currentMillis = millis();
+    currentMillis = millis(); git
     if (currentMillis - previousMillis > interval) {
       
       pulse1Sec = pulseCount;
       pulseCount = 0;
-      flowRate = ((1000.0 / (millis() - previousMillis)) * pulse1Sec) / calibrationFactor;
+      flowRate =  pulse1Sec / calibrationFactor;
       previousMillis = millis();
       flowMilliLitres = (flowRate / 60) * 1000;
 
