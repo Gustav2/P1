@@ -33,19 +33,32 @@ unsigned long getTime() {
 }
 
 void setup_wifi() {
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED);
+  int attempts = 0;
+  while (WiFi.status() != WL_CONNECTED && attempts < 10) {
+    WiFi.begin(ssid, password);
+    attempts++;
+    delay(50); 
+  }
 }
 
 void setup_mqtt() {
-  client.setServer(mqtt_server, 1883);
-  client.connect(UID); //set the UID.
-  while (!client.connected());
+  int attempts = 0;
+  while (!client.connected() && attempts < 10) {
+    client.setServer(mqtt_server, 1883);
+    client.connect(UID);
+    attempts++;
+    delay(50);
+  }
 }
 
 void setup_ntp() {  
-  configTime(0, 0, ntpServer);
-  delay(50);
+  struct tm timeinfo;
+  int attempts = 0;
+  while (!getLocalTime(&timeinfo) && attempts < 10) {
+    configTime(0, 0, ntpServer);
+    attempts++;
+    delay(50);
+  }
 }
 
 void initialize() {
@@ -59,17 +72,15 @@ void setup() {
 }
 
 void loop() {
-  unsigned long getTime();
   unsigned long now;
-  if (WiFi.status() != WL_CONNECTED || !client.connected() || !(now = getTime())) {
+  struct tm timeinfo;
+  if (WiFi.status() != WL_CONNECTED || !client.connected() || !(now = getTime()) || !getLocalTime(&timeinfo)) {
     initialize();
     delay(50);
   }
-
-  delay(150);
   LDR_Reading = analogRead(LDR_Pin);
   time_to_midnight = 86400 - (getTime() % 86400);
-  delay(50);
+  delay(50);  
   if (time_to_midnight == 0) {
     client.publish("sensor/alive", UID);
   }
