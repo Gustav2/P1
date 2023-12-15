@@ -1,13 +1,13 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 
-//5v på det ene ben af force sensor.
-//fsrPin på det andet ben.
-//Ground pin på en 10k ohm resistor.
+//5v on one leg of the Force Sensitive Resistor.
+//Analogue_Pin on the other pin, between 10k ohm resistor and pin.
+//Ground pin on a 10k ohm resistor.
 
-int fsrPin = 0;         // FSR og 10K pulldown er forbundet til a0
-int fsrReading;         // Analog læsning fra FSR resistordeler
-int previousState = -1; // Initialiser den forrige tilstand
+int fsrPin = 0;         // FSR and 10k pulldown connected to pin 0
+int fsrReading;         // Analogue reading from FSR
+int previousState = -1; // Initialise previous state
 
 // Update these with values suitable for your network.
 const char* ssid = "P1";//put your wifi ssid here
