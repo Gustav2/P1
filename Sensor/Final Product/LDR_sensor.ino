@@ -2,14 +2,14 @@
 #include <PubSubClient.h>
 #include "time.h"
 
-//5v på det ene ben af LDR sensor.
-//LDR_Pin på det andet ben, mellem 10k ohm resistor og benet.
+//5v på det ene ben af Light Sensitive Resistor.
+//Analogue_Pin på det andet ben, mellem 10k ohm resistor og benet.
 //Ground pin på en 10k ohm resistor.
 
-int LDR_Pin = 2;          // LDR og 10K pulldown er forbundet til 2
-int LDR_Reading;          // Analog læsning fra LDR
-int LDR_Threshold = 1400; // Lys grænse for åbning af køleskab
-int Previous_State;       // Initialiser den forrige tilstand
+int Analogue_Pin = 2;          // LDR og 10K pulldown er forbundet til pin 2
+int Analogue_Reading;          // Analog læsning fra LDR
+int Threshold = 1400;          // Lys grænse for åbning af køleskab
+int Previous_State;            // Initialiser den forrige tilstand
 
 const char* ssid = "P1";                     //wifi ssid
 const char* password = "password1234";       //wifi password
@@ -45,11 +45,11 @@ void loop() {
   if (WiFi.status() != WL_CONNECTED || !client.connected()) {
     initialize();
   }
-  LDR_Reading = analogRead(LDR_Pin);
-  if (LDR_Reading >= LDR_Threshold && Previous_State != 0) {
+  Analogue_Reading = analogRead(Analogue_Pin);
+  if (Analogue_Reading >= Threshold && Previous_State != 0) {
     client.publish(topic, "Fridge_Open");
     Previous_State = 0;
-  } else if (LDR_Reading < LDR_Threshold && Previous_State != 1) {
+  } else if (Analogue_Reading < Threshold && Previous_State != 1) {
     client.publish(topic, "Fridge_Closed");
     Previous_State = 1;
   }
