@@ -1,15 +1,14 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
-#include "time.h"
 
-//5v på det ene ben af Force Sensitive Resistor.
-//Analogue_Pin på det andet ben, mellem 10k ohm resistor og benet.
-//Ground pin på en 10k ohm resistor.
+//5v on one leg of the Force Sensitive Resistor.
+//Analogue_Pin on the other pin, between 10k ohm resistor and pin.
+//Ground pin on a 10k ohm resistor.
 
-int Analogue_Pin = 2;          // FSR og 10K pulldown er forbundet til pin 2
-int Analogue_Reading;          // Analog læsning fra FSR
-int Threshold = 250;          // Lys grænse for åbning af køleskab
-int Previous_State;            // Initialiser den forrige tilstand
+int Analogue_Pin = 2;          // FSR and 10k pulldown connected to pin 2
+int Analogue_Reading;          // Analogue reading from FSR
+int Threshold = 250;           // Light threshold from opening refrigerator.
+int Previous_State;            // Initialise previous state
 
 const char* ssid = "P1";                     //wifi ssid
 const char* password = "password1234";       //wifi password
