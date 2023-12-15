@@ -21,9 +21,6 @@ class MQTTHandler:
     def connect(self):
         self.client.username_pw_set(
             self.credentials["username"], self.credentials["password"])
-        print("Connecting to broker", self.broker, "on port", self.port)
-        print("Client ID:", self.client._client_id)
-        print("Credentials:", self.credentials)
         self.client.on_message = self._on_message
 
         self.client.connect(self.broker, self.port)
@@ -53,8 +50,6 @@ class MQTTHandler:
     def _add_db_sensors(self):
         sensors = self.db_handler.get_all_sensors()
         for sensor in sensors:
-            print(sensor)
-            print("Subscribing to", sensor[1])
             self.client.subscribe(sensor[1], 2)
 
     def _sensor_receive(self, client, userdata, message):
@@ -62,8 +57,6 @@ class MQTTHandler:
             return
         self.db_handler.insert_data(
             message.topic.split("/")[1], message.topic, message.payload.decode("utf-8"), datetime.datetime.now())
-        print("Received message: " + str(message.payload.decode("utf-8")) +
-              " on topic " + str(message.topic) + " with QoS " + str(message.qos))
 
     def _on_message(self, client, userdata, message):
         print("fallback", message.topic, message.payload)

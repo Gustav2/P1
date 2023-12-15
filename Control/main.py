@@ -13,7 +13,7 @@ def sensor():
     msg = ""
     if request.method == "POST":
         if request.form["topic"] == "":
-            msg = "Topic cannot be empty, you dumbass"
+            msg = "Topic cannot be empty"
         else:
             msg = handler.sensor_subscribe(request.form["topic"])
 
@@ -41,9 +41,7 @@ def upload():
         host = request.form.get("host")
         port = request.form.get("port")
         with open('main.db', 'rb') as f:
-            r = requests.post(f'http://{host}:{port}', files={'main.db': f})
-            print(r.status_code)
-            print("Uploaded")
+            r = requests.post(f'{host}:{port}', files={'main.db': f})
     return render_template("upload.html")
 
 
