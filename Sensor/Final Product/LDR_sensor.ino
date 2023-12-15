@@ -15,7 +15,6 @@ const char* ssid = "P1";                     //wifi ssid
 const char* password = "password1234";       //wifi password
 const char* mqtt_server = "192.168.1.149";   //mqtt server ip
 const int mqtt_port = 1883;                  //mqtt server port
-const char* ntpServer = "1.dk.pool.ntp.org"; //NTP server
 const char* UID = "ESP32LDR";                //UID
 const char* topic = "sensor/LDR";            //topic
 
