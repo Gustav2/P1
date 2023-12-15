@@ -1,7 +1,7 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 
-//5v on one leg of the Force Sensitive Resistor.
+//5v on one leg of the Force Sensitive Resistor
 //Analogue_Pin on the other pin, between 10k ohm resistor and pin.
 //Ground pin on a 10k ohm resistor.
 
