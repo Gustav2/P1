@@ -1,6 +1,5 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
-#include "time.h"
 
 //LDR:
 //5v on one pin of the Light Dependent Resistor.
