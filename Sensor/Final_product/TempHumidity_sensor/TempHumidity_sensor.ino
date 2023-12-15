@@ -1,59 +1,57 @@
-#include <Arduino.h>
+#include <PubSubClient.h>
+#include <WiFi.h>
 #include <SensirionI2CSht4x.h>
 #include <Wire.h>
-#include <WiFi.h>
-#include <PubSubClient.h>
 #include <string>
 
-//Red wire 3.3v
-//Black wire ground
-//Yellow wire on pin 9 (SCL)
-//White wire on pin 8 (SDA)
-RTC_DATA_ATTR unsigned int bootcount=0;
-int one_sec  = 1000000; //micro second to 1 one second
-const char* uid = "ESP32Temp/Hum";
-SensirionI2CSht4x sht4x;
+//TempHumidity:
+//VCC on 3.3v
+//Ground on ground
+//SCL on pin 9
+//SDA on pin 8
 
-const char* ssid = "Fashion";//put your wifi ssid here
-const char* password = "for_the_aesthetic_tho_9B";//put your wifi password here.
-const char* mqtt_server = "192.168.0.106";
+const char* ssid = "P1";                      //wifi ssid
+const char* password = "password1234";        //wifi password
+const char* mqtt_server = "192.168.1.149";    //mqtt server ip
+const int mqtt_port = 1883;                   //mqtt server port
+const char* UID = "ESP32Temp/Humidity";       //UID
+const char* topic1 = "sensor/Temp";           //topic for temperature
+const char* topic2 = "sensor/Humidity";       //topic for humidity
+const int time_to_wakeup = 900;               //in seconds
 
 WiFiClient espClient;
 PubSubClient client(espClient);
+SensirionI2CSht4x sht4x;
 
-void setup_wifi() { //Connect to wifi. While loop breaks when connected.
-  WiFi.begin(ssid, password); 
-  while (WiFi.status() != WL_CONNECTED);
+void initialize() {
+  while (!client.connected()) {
+    while (WiFi.status() != WL_CONNECTED) {
+      WiFi.begin(ssid, password);
+      delay(50); 
+    }
+    client.setServer(mqtt_server, mqtt_port);
+    client.connect(UID);
+    delay(50);
+  }
 }
 
 void setup() {
-    esp_sleep_enable_timer_wakeup(2000); // 60000000==1 min * 30
-    bootcount++;
-    setup_wifi();
-    client.setServer(mqtt_server, 1883);
+    esp_sleep_enable_timer_wakeup(1000000 * time_to_wakeup);
     Wire.begin();
     sht4x.begin(Wire);
-    client.connect(uid);
-    if (bootcount==48) {
-    client.publish("sensor/alive", uid);
-    bootcount=0;
-    }
+    initialize();  
     float temperature;
     float humidity;
     sht4x.measureHighPrecision(temperature, humidity);
-        {
-        char msg_out1[6];
-        dtostrf(temperature,0,2,msg_out1);
-        client.publish("sensor/temp", msg_out1);
-        
-        char msg_out2[6];
-        dtostrf(humidity,0,2,msg_out2);
-        client.publish("sensor/humidity", msg_out2);
-    }
-    delay(80);
+    char msg_out1[6];
+    char msg_out2[6];
+    dtostrf(temperature,0,2,msg_out1);
+    dtostrf(humidity,0,2,msg_out2);
+    client.publish(topic1, msg_out1);
+    client.publish(topic2, msg_out2);
+    delay(50);
     esp_deep_sleep_start();
 }
 
 void loop() {
-  
 }

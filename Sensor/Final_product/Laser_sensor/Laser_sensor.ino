@@ -1,55 +1,60 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
-#include "time.h"
 
-RTC_DATA_ATTR unsigned int time_to_midnight;
-int one_sec  = 1000000; //micro second to 1 one second
+//LDR:
+//5v on one pin of the Light Dependent Resistor.
+//Analogue_Pin on the other pin, between 10k ohm resistor and pin.
+//Ground pin on a 10k ohm resistor.
 
-const char* ssid = "P1"; //wifi ssid
-const char* password = "password1234"; //wifi password
-const char* mqtt_server = "192.168.1.149"; //mqtt server ip
-const char* UID = "ESP32Laser"; //UID
+//Laser:
+//5v on 5v
+//Ground pin on ground
+
+int Analogue_Pin = 2;          // LDR and 10K pulldown are connected to pin 2
+int Analogue_Reading;          // Analogue reading from LDR
+int Threshold = 1000;          // Light threshold from opening refrigerator.
+int Previous_State;            // Initialise the previous state
+
+const char* ssid = "P1";                     //wifi ssid
+const char* password = "password1234";       //wifi password
+const char* mqtt_server = "192.168.1.149";   //mqtt server ip
+const int mqtt_port = 1883;                  //mqtt server port
+const char* UID = "ESP32Laser";              //UID
+const char* topic = "sensor/Laser";          //topic
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-// ved resistor: grøn = ground, hvid = 0, brun = 5v 
-// ved laser: orange = ground, hvid = 5v
-
-int ldr = 2; //analog pin to which LDR is connected
-int ldr_value = 0; //variable to store LDR values
-int old_ldr = 0;
-
-void setup_wifi() { //Connect to wifi. While loop breaks when connected.
-  WiFi.begin(ssid, password); 
-  while (WiFi.status() != WL_CONNECTED);
+void initialize() {
+  while (!client.connected()) {
+    while (WiFi.status() != WL_CONNECTED) {
+      WiFi.begin(ssid, password);
+      delay(50); 
+    }
+    client.setServer(mqtt_server, mqtt_port);
+    client.connect(UID);
+    delay(50);
+  }
 }
 
-// Function that gets current epoch time
-unsigned long getTime() {
-  time_t now;
-  struct tm timeinfo;
-  getLocalTime(&timeinfo);
-  time(&now);
-  return now;
-}
-
-void setup() {
-  setup_wifi();
-  client.setServer(mqtt_server, 1883);
-  client.connect(UID);
-  pinMode(ldr,INPUT);
+void setup() {    
+  initialize();
+  pinMode(Analogue_Pin,INPUT);
 }
 
 void loop() {
-  time_to_midnight = 86400 - (getTime() % 86400);
-  if (time_to_midnight=0){
-    client.publish("sensor/alive", UID);
+  if (client.connected()) {
+    client.loop();
   }
-  ldr_value = analogRead(ldr); //reads the LDR values
-  delay(100); //waits
-  if (abs(ldr_value - old_ldr) >= 500 && ldr_value < 1000) {
-    client.publish("sensor/door","Person gik igennem");
+  delay(50);
+  if (WiFi.status() != WL_CONNECTED || !client.connected()) {
+    initialize();
   }
-  old_ldr = ldr_value;
+  Analogue_Reading = analogRead(Analogue_Pin);
+  if (Analogue_Reading >= Threshold && Previous_State != 0) {
+    Previous_State = 0;
+  } else if (Analogue_Reading < Threshold && Previous_State != 1) {
+    client.publish(topic, "Person_entered");
+    Previous_State = 1;
+  }
 }
