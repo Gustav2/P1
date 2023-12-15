@@ -1,20 +1,19 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
-#include "time.h"
 
 //LDR:
-//5v på det ene ben af Light Sensitive Resistor.
-//Analogue_Pin på det andet ben, mellem 10k ohm resistor og benet.
-//Ground pin på en 10k ohm resistor.
+//5v on one pin of the Light Dependent Resistor.
+//Analogue_Pin on the other pin, between 10k ohm resistor and pin.
+//Ground pin on a 10k ohm resistor.
 
 //Laser:
-//5v på 5v
-//Ground pin på ground
+//5v on 5v
+//Ground pin on ground
 
-int Analogue_Pin = 2;          // LDR og 10K pulldown er forbundet til pin 2
-int Analogue_Reading;          // Analog læsning fra LDR
-int Threshold = 1000;          // Lys grænse for åbning af køleskab
-int Previous_State;            // Initialiser den forrige tilstand
+int Analogue_Pin = 2;          // LDR and 10K pulldown are connected to pin 2
+int Analogue_Reading;          // Analogue reading from LDR
+int Threshold = 1000;          // Light threshold from opening refrigerator.
+int Previous_State;            // Initialise the previous state
 
 const char* ssid = "P1";                     //wifi ssid
 const char* password = "password1234";       //wifi password
