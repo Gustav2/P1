@@ -28,7 +28,7 @@ void initialize() {
       delay(50); 
     }
     client.setServer(mqtt_server, mqtt_port);
-    client.connect(UID, NULL, NULL, "sensor/alive", 1, true, "sensor/LDR/dead");
+    client.connect(UID);
     delay(50);
   }
 }
