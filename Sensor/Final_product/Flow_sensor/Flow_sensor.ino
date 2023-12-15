@@ -5,6 +5,7 @@
 //Red wire 5v
 //Black wire ground
 //Yellow wire on #define SENSOR
+
 #define SENSOR 9
 
 const char* ssid = "P1";                     //wifi ssid
@@ -18,7 +19,7 @@ const char* topic2 = "sensor/FlowTotal";     //topic for humidity
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-int previousState;
+int Previous_State;
 
 long currentMillis = 0;
 long previousMillis = 0;
@@ -58,6 +59,13 @@ void setup() {
 }
 
 void loop() { 
+  if (client.connected()) {
+    client.loop();
+  }
+  delay(50);
+  if (WiFi.status() != WL_CONNECTED || !client.connected()) {
+    initialize();
+  }
   currentMillis = millis();
   if (currentMillis - previousMillis > interval) {
     pulse1Sec = pulseCount;
@@ -66,18 +74,16 @@ void loop() {
     previousMillis = millis();
     flowMilliLitres = (flowRate / 60) * 1000;
     totalMilliLitres += flowMilliLitres;
-    
-    if (flowRate > 0 && previousState != 0) { 
+    if (flowRate > 0 && Previous_State != 0) { 
       client.publish(topic1, "start");
-      previousState = 0;
-    }
-    else if (flowRate == 0  && previousState != 1) {
-       client.publish(topic1, "stop");
-       char msg_out[10];
-       dtostrf(totalMilliLitres,0,1,msg_out);
-       client.publish(topic2, msg_out);
-       totalMilliLitres = 0;
-       previousState = 1;
+      Previous_State = 0;
+    } else if (flowRate == 0  && Previous_State != 1) {
+      client.publish(topic1, "stop");
+      char msg_out[10];
+      dtostrf(totalMilliLitres,0,1,msg_out);
+      client.publish(topic2, msg_out);
+      totalMilliLitres = 0;
+      Previous_State = 1;
     } 
   }
 }
