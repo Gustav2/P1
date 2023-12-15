@@ -39,7 +39,9 @@ void setup() {
 }
 
 void loop() {
-  client.loop();
+  if (client.connected()) {
+    client.loop();
+  }
   delay(50);
   if (WiFi.status() != WL_CONNECTED || !client.connected()) {
     initialize();
