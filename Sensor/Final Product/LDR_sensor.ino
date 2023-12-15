@@ -26,10 +26,10 @@ void initialize() {
     while (WiFi.status() != WL_CONNECTED) {
       WiFi.begin(ssid, password);
       delay(50); 
+    }
     client.setServer(mqtt_server, mqtt_port);
     client.connect(UID, NULL, NULL, "sensor/alive", 1, true, "sensor/LDR/dead");
     delay(50);
-    }
   }
 }
 
