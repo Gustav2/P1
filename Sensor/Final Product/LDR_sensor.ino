@@ -8,7 +8,7 @@
 
 int Analogue_Pin = 2;          // LDR og 10K pulldown er forbundet til pin 2
 int Analogue_Reading;          // Analog læsning fra LDR
-int Threshold = 1400;          // Lys grænse for åbning af køleskab
+int Threshold = 100;          // Lys grænse for åbning af køleskab
 int Previous_State;            // Initialiser den forrige tilstand
 
 const char* ssid = "P1";                     //wifi ssid
