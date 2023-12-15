@@ -1,6 +1,6 @@
 {
   "username": "admin",
   "password": "admin",
-  "broker": "127.0.0.1",
+  "broker": "192.168.1.149",
   "port": 1883
 }
