@@ -47,10 +47,10 @@ void loop() {
   }
   Analogue_Reading = analogRead(Analogue_Pin);
   if (Analogue_Reading >= Threshold && Previous_State != 0) {
-    client.publish(topic, "Fridge_Open");
+    client.publish(topic, "Open");
     Previous_State = 0;
   } else if (Analogue_Reading < Threshold && Previous_State != 1) {
-    client.publish(topic, "Fridge_Closed");
+    client.publish(topic, "Closed");
     Previous_State = 1;
   }
 }
