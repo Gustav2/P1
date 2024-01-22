@@ -13,8 +13,8 @@ const char* password = "password1234";       //wifi password
 const char* mqtt_server = "192.168.1.149";   //mqtt server ip
 const int mqtt_port = 1883;                  //mqtt server port
 const char* UID = "ESP32Flow";               //UID
-const char* topic1 = "sensor/FlowRate";      //topic for fl
-const char* topic2 = "sensor/FlowTotal";     //topic for humidity
+const char* topic1 = "sensor/FlowRate";      //topic for flow rate
+const char* topic2 = "sensor/FlowTotal";     //topic for flow total
 
 WiFiClient espClient;
 PubSubClient client(espClient);
