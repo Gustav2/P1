@@ -13,8 +13,8 @@ PubSubClient client(espClient);
 
 void initialize() {
   while (!client.connected()) {
+    WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
-      WiFi.begin(ssid, password);
       delay(50); 
     }
     client.setServer(mqtt_server, mqtt_port);
