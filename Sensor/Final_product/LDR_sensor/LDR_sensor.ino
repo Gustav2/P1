@@ -8,7 +8,7 @@
 
 int Analogue_Pin = 2;          // LDR and 10K pulldown are connected to pin 2
 int Analogue_Reading;          // Analogue reading from LDR
-int Threshold = 100;           // Light threshold from opening refrigerator
+int Threshold = 500;           // Light threshold from opening refrigerator
 int Previous_State;            // Initialise the previous state
 
 const char* ssid = "P1";                     //wifi ssid
@@ -16,15 +16,16 @@ const char* password = "password1234";       //wifi password
 const char* mqtt_server = "192.168.1.149";   //mqtt server ip
 const int mqtt_port = 1883;                  //mqtt server port
 const char* UID = "ESP32LDR";                //UID
-const char* topic = "sensor/LDR";            //topic
+const char* topic = "sensor/Fridge";            //topic
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 
 void initialize() {
   while (!client.connected()) {
+    WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
-      WiFi.begin(ssid, password);
+      
       delay(50); 
     }
     client.setServer(mqtt_server, mqtt_port);

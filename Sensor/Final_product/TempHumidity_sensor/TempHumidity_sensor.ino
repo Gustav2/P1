@@ -24,9 +24,12 @@ PubSubClient client(espClient);
 SensirionI2CSht4x sht4x;
 
 void initialize() {
+  Serial.begin(9600);
+  Serial.println("Begyndt");
   while (!client.connected()) {
+    WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
-      WiFi.begin(ssid, password);
+      
       delay(50); 
     }
     client.setServer(mqtt_server, mqtt_port);
@@ -36,10 +39,11 @@ void initialize() {
 }
 
 void setup() {
-    esp_sleep_enable_timer_wakeup(1000000 * time_to_wakeup);
+    esp_sleep_enable_timer_wakeup(10000000);
     Wire.begin();
     sht4x.begin(Wire);
     initialize();  
+    Serial.println("Hej");
     float temperature;
     float humidity;
     sht4x.measureHighPrecision(temperature, humidity);
